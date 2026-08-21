@@ -73,13 +73,73 @@ class ErrorResponse(BaseModel):
     detail: str
     timestamp: str
 
-# Initialize services
+# ─── Hospital Profile Pydantic Models ────────────────────────────────────────
+
+class HospitalProfileRequest(BaseModel):
+    hospital_id: Optional[str] = None
+    name: str
+    description: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
+    pin_code: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    website: Optional[str] = None
+    emergency_contact: Optional[str] = None
+    total_beds: int = Field(default=100, ge=1)
+    icu_beds: int = Field(default=10, ge=0)
+    emergency_beds: int = Field(default=10, ge=0)
+    departments: List[str] = []
+    services: List[str] = []
+    facilities: List[str] = []
+    operating_hours: Optional[str] = None
+    emergency_available: bool = False
+    public_status: str = "Normal"
+    admin_email: Optional[str] = None
+
+class HospitalProfileResponse(BaseModel):
+    hospital_id: str
+    name: str
+    description: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
+    pin_code: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    website: Optional[str] = None
+    emergency_contact: Optional[str] = None
+    total_beds: int
+    icu_beds: int
+    emergency_beds: int
+    departments: List[str]
+    services: List[str]
+    facilities: List[str]
+    operating_hours: Optional[str] = None
+    emergency_available: bool
+    public_status: str
+    created_at: str
+    updated_at: str
+
+class AlertStatusUpdate(BaseModel):
+    status: str = Field(pattern="^(New|Acknowledged|Resolved)$")
+
+# ─── Initialize services ──────────────────────────────────────────────────────
+
 prediction_engine = PredictionEngine()
 alert_service = AlertService()
 upload_handler = UploadHandler()
 
 # Global data storage (in-memory for demo)
 hospital_data: List[HospitalRecord] = []
+
+# Multi-hospital data stores
+hospital_profiles: dict = {}          # hospital_id -> profile dict
+hospital_data_by_id: dict = {}        # hospital_id -> List[HospitalRecord]
+hospital_alerts: dict = {}            # hospital_id -> List[dict]
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
@@ -555,11 +615,89 @@ async def get_recommendations():
     }
 
 # ============================================================================
+# HOSPITAL PROFILE ENDPOINTS
+# ============================================================================
+
+import uuid
+
+@app.post("/hospital/profile", response_model=HospitalProfileResponse)
+async def create_or_update_hospital_profile(request: HospitalProfileRequest):
+    """Create or update a hospital profile (upsert by hospital_id)"""
+    now = datetime.now().isoformat()
+    hospital_id = request.hospital_id
+    if not hospital_id:
+        hospital_id = f"HOSP-{uuid.uuid4().hex[:8].upper()}"
+
+    existing = hospital_profiles.get(hospital_id, {})
+    profile = {
+        "hospital_id": hospital_id,
+        "name": request.name,
+        "description": request.description,
+        "address": request.address,
+        "city": request.city,
+        "state": request.state,
+        "country": request.country,
+        "pin_code": request.pin_code,
+        "phone": request.phone,
+        "email": request.email,
+        "website": request.website,
+        "emergency_contact": request.emergency_contact,
+        "total_beds": request.total_beds,
+        "icu_beds": request.icu_beds,
+        "emergency_beds": request.emergency_beds,
+        "departments": request.departments,
+        "services": request.services,
+        "facilities": request.facilities,
+        "operating_hours": request.operating_hours,
+        "emergency_available": request.emergency_available,
+        "public_status": request.public_status,
+        "created_at": existing.get("created_at", now),
+        "updated_at": now,
+    }
+    hospital_profiles[hospital_id] = profile
+    return HospitalProfileResponse(**profile)
+
+
+@app.get("/hospital/profile/{hospital_id}", response_model=HospitalProfileResponse)
+async def get_hospital_profile(hospital_id: str):
+    """Get hospital profile by ID"""
+    profile = hospital_profiles.get(hospital_id)
+    if not profile:
+        raise HTTPException(status_code=404, detail=f"Hospital profile not found: {hospital_id}")
+    return HospitalProfileResponse(**profile)
+
+
+@app.get("/hospital/alerts/{hospital_id}")
+async def get_hospital_alerts(hospital_id: str):
+    """Get all alerts for a hospital"""
+    return {"alerts": hospital_alerts.get(hospital_id, [])}
+
+
+@app.patch("/hospital/alerts/{hospital_id}/{alert_id}")
+async def update_hospital_alert(hospital_id: str, alert_id: str, update: AlertStatusUpdate):
+    """Update alert status"""
+    alerts = hospital_alerts.get(hospital_id, [])
+    for i, a in enumerate(alerts):
+        if a.get("id") == alert_id:
+            alerts[i]["status"] = update.status
+            alerts[i]["updated_at"] = datetime.now().isoformat()
+            hospital_alerts[hospital_id] = alerts
+            return {"status": "updated", "alert": alerts[i]}
+    raise HTTPException(status_code=404, detail="Alert not found")
+
+
+@app.get("/hospital/list")
+async def list_hospitals():
+    """List all registered hospitals (admin use)"""
+    return {"hospitals": list(hospital_profiles.values())}
+
+
+# ============================================================================
 # API ENDPOINTS
 # ============================================================================
 
 @app.post("/upload-logs", response_model=UploadResponse)
-async def upload_logs(file: UploadFile = File(...)):
+async def upload_logs(file: UploadFile = File(...), hospital_id: Optional[str] = None):
     """
     Upload CSV file with hospital logs
     
@@ -591,20 +729,37 @@ async def upload_logs(file: UploadFile = File(...)):
         
         # Parse CSV into records
         records = upload_handler.parse_csv(file)
-        
-        # Store records in BigQuery
-        storage_result = upload_handler.store_records(records)
-        
+
+        # Store records per-hospital if hospital_id provided
+        if hospital_id:
+            # Tag records with hospital_id
+            tagged = []
+            for r in records:
+                r.hospital_id = hospital_id
+                tagged.append(r)
+            hospital_data_by_id[hospital_id] = tagged
+            hospital_data.clear()
+            hospital_data.extend(tagged)
+        else:
+            hospital_data.clear()
+            hospital_data.extend(records)
+
+        # Store records in BigQuery (may gracefully fail)
+        try:
+            upload_handler.store_records(records)
+        except Exception:
+            pass  # Graceful degradation if BigQuery unavailable
+
         # Invalidate prediction cache since new data was uploaded
         prediction_engine.invalidate_cache()
-        
+
         return UploadResponse(
             status="success",
             record_count=len(records),
             warnings=validation_result.warnings,
             message=f"Successfully uploaded {len(records)} records"
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
