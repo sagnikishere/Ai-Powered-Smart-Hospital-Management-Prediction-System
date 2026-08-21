@@ -5,7 +5,100 @@ from typing import List, Dict, Optional
 
 
 @dataclass
+class User:
+    email: str
+    role: str
+    hospital_id: Optional[str]
+    created_at: datetime
+    
+    def validate(self) -> bool:
+        if not isinstance(self.email, str) or not self.email.strip():
+            return False
+        if self.role not in ["PATIENT", "HOSPITAL_ADMIN", "HOSPITAL_STAFF"]:
+            return False
+        return True
+
+
+@dataclass
+class HospitalProfile:
+    hospital_id: str
+    name: str
+    total_beds: int
+    logo_url: Optional[str] = None
+    cover_image_url: Optional[str] = None
+    description: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
+    pin_code: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    website: Optional[str] = None
+    emergency_contact: Optional[str] = None
+    icu_beds: Optional[int] = None
+    emergency_beds: Optional[int] = None
+    departments: Optional[List[str]] = None
+    facilities: Optional[List[str]] = None
+    services: Optional[List[str]] = None
+    operating_hours: Optional[str] = None
+    emergency_services_available: Optional[bool] = None
+    public_status: str = "Normal"
+    created_at: Optional[datetime] = None
+    
+    def validate(self) -> bool:
+        if not isinstance(self.hospital_id, str) or not self.hospital_id.strip():
+            return False
+        if not isinstance(self.name, str) or not self.name.strip():
+            return False
+        if not isinstance(self.total_beds, int) or self.total_beds <= 0:
+            return False
+        return True
+
+
+@dataclass
+class PatientProfile:
+    email: str
+    full_name: str
+    phone: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    gender: Optional[str] = None
+    city: Optional[str] = None
+    emergency_contact: Optional[str] = None
+    preferred_hospital_id: Optional[str] = None
+    created_at: Optional[datetime] = None
+    
+    def validate(self) -> bool:
+        if not isinstance(self.email, str) or not self.email.strip():
+            return False
+        if not isinstance(self.full_name, str) or not self.full_name.strip():
+            return False
+        return True
+
+
+@dataclass
+class HospitalAnnouncement:
+    announcement_id: str
+    hospital_id: str
+    title: str
+    message: str
+    published_at: Optional[datetime] = None
+    
+    def validate(self) -> bool:
+        if not isinstance(self.announcement_id, str) or not self.announcement_id.strip():
+            return False
+        if not isinstance(self.hospital_id, str) or not self.hospital_id.strip():
+            return False
+        if not isinstance(self.title, str) or not self.title.strip():
+            return False
+        if not isinstance(self.message, str) or not self.message.strip():
+            return False
+        return True
+
+
+@dataclass
 class HospitalRecord:
+    hospital_id: str
     date: datetime
     admissions: int
     beds_occupied: int
@@ -14,6 +107,8 @@ class HospitalRecord:
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
+        if not isinstance(self.hospital_id, str):
+            return False
         if not isinstance(self.date, datetime):
             return False
         if not isinstance(self.admissions, int) or self.admissions < 0:
@@ -29,6 +124,8 @@ class HospitalRecord:
 
 @dataclass
 class DailyPrediction:
+    prediction_id: str
+    hospital_id: str
     date: datetime
     predicted_beds: int
     bed_stress: float  # 0-100
@@ -37,6 +134,10 @@ class DailyPrediction:
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
+        if not isinstance(self.prediction_id, str):
+            return False
+        if not isinstance(self.hospital_id, str):
+            return False
         if not isinstance(self.date, datetime):
             return False
         if not isinstance(self.predicted_beds, int) or self.predicted_beds < 0:
@@ -137,20 +238,29 @@ class Recommendation:
 
 @dataclass
 class AlertData:
+    alert_id: str
+    hospital_id: str
     alert_type: str  # "bed_stress" or "staff_risk"
     risk_score: float
     threshold: float
+    status: str
     predictions: List[DailyPrediction]
     recommendations: List[Recommendation]
     generated_at: datetime
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
+        if not isinstance(self.alert_id, str):
+            return False
+        if not isinstance(self.hospital_id, str):
+            return False
         if not isinstance(self.alert_type, str) or self.alert_type not in ["bed_stress", "staff_risk"]:
             return False
         if not isinstance(self.risk_score, (int, float)) or not (0 <= self.risk_score <= 100):
             return False
         if not isinstance(self.threshold, (int, float)) or not (50 <= self.threshold <= 100):
+            return False
+        if not isinstance(self.status, str) or self.status not in ["New", "Acknowledged", "Resolved"]:
             return False
         if not isinstance(self.predictions, list):
             return False
@@ -167,12 +277,15 @@ class AlertData:
 
 @dataclass
 class ScenarioRequest:
+    hospital_id: str
     sick_rate: float  # 0.0 to 0.5
     admission_surge: float  # -0.3 to 1.0
     baseline_date: datetime
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
+        if not isinstance(self.hospital_id, str):
+            return False
         if not isinstance(self.sick_rate, (int, float)) or not (0.0 <= self.sick_rate <= 0.5):
             return False
         if not isinstance(self.admission_surge, (int, float)) or not (-0.3 <= self.admission_surge <= 1.0):
@@ -228,6 +341,7 @@ class ValidationResult:
 
 @dataclass
 class DashboardData:
+    hospital_id: str
     bed_stress_current: float
     staff_risk_current: float
     active_alerts_count: int
@@ -238,6 +352,8 @@ class DashboardData:
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
+        if not isinstance(self.hospital_id, str):
+            return False
         if not isinstance(self.bed_stress_current, (int, float)) or not (0 <= self.bed_stress_current <= 100):
             return False
         if not isinstance(self.staff_risk_current, (int, float)) or not (0 <= self.staff_risk_current <= 100):
@@ -264,6 +380,7 @@ class DashboardData:
 @dataclass
 class CrisisLesson:
     crisis_id: str
+    hospital_id: str
     date: datetime
     crisis_description: str
     bed_stress: float
@@ -276,6 +393,8 @@ class CrisisLesson:
     def validate(self) -> bool:
         """Validates data types and ranges"""
         if not isinstance(self.crisis_id, str) or not self.crisis_id.strip():
+            return False
+        if not isinstance(self.hospital_id, str):
             return False
         if not isinstance(self.date, datetime):
             return False

@@ -76,3 +76,91 @@ export interface DashboardData {
     [key: string]: "up" | "down" | "stable"
   }
 }
+
+// ─── Patient Portal Types ──────────────────────────────────────────────────
+
+export type HospitalType =
+  | 'Multi-speciality'
+  | 'General'
+  | "Children's"
+  | 'Maternity'
+  | 'Trauma'
+  | 'Psychiatric'
+  | 'Cancer'
+  | 'Rehabilitation'
+
+export type PublicStatus = 'Normal' | 'Busy' | 'High Demand'
+
+export interface Hospital {
+  id: string
+  name: string
+  type: HospitalType
+  description: string
+  address: string
+  city: string
+  state: string
+  country: string
+  pinCode: string
+  phone: string
+  email: string
+  website?: string
+  emergencyContact: string
+  logoUrl?: string
+  coverImageUrl?: string
+  departments: string[]
+  services: string[]
+  facilities: string[]
+  operatingHours: string
+  emergencyAvailable: boolean
+  publicStatus: PublicStatus
+  createdAt: string
+  isPublished: boolean
+}
+
+export interface HospitalAnnouncement {
+  id: string
+  hospitalId: string
+  title: string
+  message: string
+  type: 'info' | 'warning' | 'urgent'
+  publishedAt: string
+}
+
+export interface PatientAccount {
+  id: string
+  email: string
+  passwordHash: string
+  fullName: string
+  phone?: string
+  dateOfBirth?: string
+  gender?: string
+  city?: string
+  emergencyContact?: string
+  preferredHospitalId?: string
+  createdAt: string
+}
+
+export type UserRole = 'PATIENT' | 'HOSPITAL_ADMIN' | 'HOSPITAL_STAFF'
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      name?: string | null
+      email?: string | null
+      image?: string | null
+      role?: UserRole
+      patientId?: string
+    }
+  }
+  interface User {
+    role?: UserRole
+    patientId?: string
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    role?: UserRole
+    patientId?: string
+  }
+}

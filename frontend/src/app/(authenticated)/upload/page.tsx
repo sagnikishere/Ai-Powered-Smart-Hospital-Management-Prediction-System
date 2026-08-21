@@ -332,7 +332,7 @@ export default function UploadPage() {
                 <h4 className="font-semibold text-gray-900 mb-3">Required Columns</h4>
                 <div className="space-y-2">
                   {[
-                    { name: 'date', desc: 'YYYY-MM-DD format', example: '2024-01-15' },
+                    { name: 'date', desc: 'YYYY-MM-DD format', example: '2026-01-15' },
                     { name: 'admissions', desc: 'Daily admissions count', example: '120' },
                     { name: 'beds_occupied', desc: 'Number of occupied beds', example: '180' },
                     { name: 'staff_on_duty', desc: 'Staff members on duty', example: '25' },
@@ -384,11 +384,11 @@ export default function UploadPage() {
               <div className="bg-gray-900 rounded-2xl p-4 overflow-x-auto">
                 <pre className="text-green-400 text-sm font-mono">
 {`date,admissions,beds_occupied,staff_on_duty,overload_flag
-2024-01-01,120,180,25,false
-2024-01-02,135,195,23,false
-2024-01-03,150,220,20,true
-2024-01-04,110,175,28,false
-2024-01-05,125,185,26,false`}
+2026-01-01,120,180,25,false
+2026-01-02,135,195,23,false
+2026-01-03,150,220,20,true
+2026-01-04,110,175,28,false
+2026-01-05,125,185,26,false`}
                 </pre>
               </div>
             </div>

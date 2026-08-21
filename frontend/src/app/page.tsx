@@ -18,7 +18,10 @@ import {
   BarChart3,
   MessageSquare,
   Zap,
-  Star
+  Star,
+  Search,
+  Building2,
+  ChevronRight
 } from "lucide-react"
 
 export default function Home() {
@@ -27,9 +30,13 @@ export default function Home() {
 
   useEffect(() => {
     if (status === "loading") return
-    
     if (session) {
-      router.push('/dashboard')
+      const role = (session.user as any)?.role
+      if (role === 'PATIENT') {
+        router.push('/patient/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
     }
   }, [session, status, router])
 
@@ -61,15 +68,22 @@ export default function Home() {
               </div>
               <span className="font-semibold text-lg tracking-tight">MedCore Health</span>
             </div>
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <div className="hidden md:flex items-center gap-6 text-sm font-medium">
               <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
               <a href="#technology" className="text-gray-600 hover:text-blue-600 transition-colors">Technology</a>
-              <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
+              <a href="#portals" className="text-gray-600 hover:text-blue-600 transition-colors">Portals</a>
+              <Button 
+                onClick={() => router.push('/patient/auth/login')}
+                variant="outline"
+                className="border-teal-500 text-teal-600 hover:bg-teal-50"
+              >
+                Patient Portal
+              </Button>
               <Button 
                 onClick={() => router.push('/auth/signin')}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                Sign In
+                Hospital Login
               </Button>
             </div>
           </div>
@@ -92,20 +106,21 @@ export default function Home() {
               AI-powered hospital capacity prediction and alerting system that forecasts bed demand 
               and staff overload risks 7 days in advance with advanced medical analytics.
             </p>
-            <div className="flex items-center gap-4 mt-8">
+            <div className="flex flex-wrap items-center gap-4 mt-8">
+              <Button 
+                size="lg" 
+                onClick={() => router.push('/patient/auth/login')}
+                className="bg-teal-600 hover:bg-teal-700 text-base px-6 py-3 shadow-lg shadow-teal-200"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Find a Hospital
+              </Button>
               <Button 
                 size="lg" 
                 onClick={() => router.push('/auth/signin')}
-                className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3"
+                className="bg-blue-600 hover:bg-blue-700 text-base px-6 py-3"
               >
-                Get Started
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="text-lg px-8 py-3"
-              >
-                Learn More
+                Hospital Login
               </Button>
             </div>
           </div>
@@ -143,6 +158,72 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Portal Selection Section */}
+        <section id="portals" className="mb-16">
+          <div className="text-center mb-10">
+            <Badge variant="secondary" className="mb-4">Two Portals, One Platform</Badge>
+            <h2 className="text-3xl font-semibold mb-3 tracking-tight">Choose Your Portal</h2>
+            <p className="text-gray-600 max-w-xl mx-auto text-sm">
+              MedCore Health serves both patients and hospital professionals with dedicated, role-separated portals.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Patient Portal Card */}
+            <div
+              className="relative group rounded-3xl overflow-hidden border-2 border-teal-200 hover:border-teal-400 bg-gradient-to-br from-teal-50 to-emerald-50/50 p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-teal-100"
+              onClick={() => router.push('/patient/auth/login')}
+            >
+              <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-700 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-teal-200 group-hover:scale-110 transition-transform duration-300">
+                <Search className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Patient Portal</h3>
+              <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                Find hospitals near you, view real-time availability, read announcements, and save your preferred hospital — all in one place.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {['Find & discover hospitals', 'View public hospital status', 'Read hospital announcements', 'Save your preferred hospital', 'Manage your health profile'].map(f => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-teal-800">
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center gap-2 text-teal-700 font-semibold text-sm group-hover:gap-3 transition-all">
+                Get Started as Patient
+                <ChevronRight className="w-4 h-4" />
+              </div>
+              <div className="absolute top-4 right-4 bg-teal-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">Free</div>
+            </div>
+
+            {/* Hospital Portal Card */}
+            <div
+              className="relative group rounded-3xl overflow-hidden border-2 border-blue-200 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50/50 p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-blue-100"
+              onClick={() => router.push('/auth/signin')}
+            >
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform duration-300">
+                <Building2 className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Hospital Portal</h3>
+              <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                For hospital administrators and staff — manage capacity, upload data, get AI predictions, and respond to alerts proactively.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {['AI capacity predictions', 'Staff risk monitoring', '7-day bed forecasting', 'Smart alert system', 'Scenario simulation'].map(f => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-blue-800">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm group-hover:gap-3 transition-all">
+                Hospital Admin Login
+                <ChevronRight className="w-4 h-4" />
+              </div>
+              <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Pro</div>
+            </div>
+          </div>
+        </section>
 
         {/* Bento Grid Features */}
         <section id="features" className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 h-[800px] lg:h-[600px] mb-16">
@@ -395,20 +476,21 @@ export default function Home() {
             Join hundreds of healthcare facilities using our AI-powered early warning system 
             to improve patient outcomes and operational efficiency.
           </p>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button 
+              size="lg"
+              onClick={() => router.push('/patient/auth/login')}
+              className="bg-teal-600 hover:bg-teal-700 text-base px-8 py-4 shadow-lg shadow-teal-200"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              Patient Portal
+            </Button>
             <Button 
               size="lg"
               onClick={() => router.push('/auth/signin')}
-              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4"
+              className="bg-blue-600 hover:bg-blue-700 text-base px-8 py-4"
             >
-              Start Free Trial
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="text-lg px-8 py-4"
-            >
-              Schedule Demo
+              Hospital Admin Login
             </Button>
           </div>
         </div>
@@ -425,7 +507,7 @@ export default function Home() {
               <span className="font-semibold text-lg tracking-tight">MedCore Health</span>
             </div>
             <p className="text-gray-600 text-sm">
-              © 2024 MedCore Health. Secure access for authorized personnel only.
+              &copy; 2026 Sagnik. Secure access for authorized personnel only.
             </p>
           </div>
         </div>

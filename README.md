@@ -1,192 +1,527 @@
-<div align="center">
+# Hospital Stress Early Warning System
 
-# 🏥 Ai-Powered-Smart-Hospital-Management-Prediction-System
-*(Hospital Stress Early Warning System)*
+An AI-powered hospital capacity management and early warning platform that predicts potential hospital stress and capacity crises up to **7 days in advance**.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)](https://cloud.google.com/)
+The system analyzes historical hospital data, patient admissions, bed occupancy, staffing levels, seasonal patterns, and other factors to forecast upcoming risks and provide actionable recommendations before critical situations occur.
 
-*A comprehensive web application that uses AI to predict hospital capacity crises 7 days in advance, enabling proactive resource management and preventing patient care delays through intelligent forecasting and automated alerting.*
-
-</div>
+> **Predict hospital stress before it happens — so hospitals can act before patients are affected.**
 
 ---
 
-## ⚠️ The Problem
+## The Problem
 
-Hospitals face critical capacity management challenges that put patient lives at risk:
+Hospitals often manage capacity issues reactively, responding only after resources become critically limited.
 
-- 📈 **Unpredictable surges** in patient admissions can overwhelm bed capacity within hours.
-- 🧑‍⚕️ **Staff shortages** during peak periods lead to dangerous patient-to-nurse ratios.
-- 📉 **Reactive management** means hospitals only respond after problems occur.
-- ⏳ **Lack of early warning** prevents proactive resource allocation and staff scheduling.
-- 👁️ **Poor visibility** into future capacity needs makes planning impossible.
+Common challenges include:
 
-These issues result in delayed patient care, staff burnout, increased mortality rates, and millions in lost revenue from diverted ambulances and cancelled procedures.
+* Unpredictable surges in patient admissions
+* Bed capacity being exceeded during peak periods
+* Staff shortages and increasing patient-to-nurse ratios
+* Delayed response to upcoming capacity problems
+* Limited visibility into future resource requirements
+* Revenue loss caused by diverted ambulances and cancelled procedures
 
----
-
-## 💡 Our Solution
-
-An AI-powered early warning system that predicts hospital stress **7 days in advance**, giving administrators time to take preventive action:
-
-### 🔮 Predictive Intelligence
-- Forecasts bed demand using historical patterns, seasonal trends, and external factors.
-- Calculates staff overload risk based on patient-to-nurse ratios and workload analysis.
-- Provides confidence scores and risk assessments for each prediction.
-
-### ⚡ Proactive Alerting
-- Automatically sends email and Slack notifications when thresholds are exceeded.
-- Generates prioritized action plans with cost estimates and implementation timelines.
-- Enables "what-if" scenario planning to test different staffing and capacity strategies.
-
-### 📊 Real-time Monitoring
-- Live dashboard with 30-second refresh showing current and predicted stress levels.
-- Interactive charts and trend analysis to identify patterns.
-- Natural language AI assistant for quick insights and recommendations.
-
-### 💡 Smart Recommendations
-- AI-generated action plans ranked by impact and cost-effectiveness.
-- Historical crisis analysis to learn from past events.
-- Customizable thresholds and alert preferences per hospital unit.
+These challenges can lead to patient care delays, staff burnout, overcrowding, and inefficient resource utilization.
 
 ---
 
-## 🚀 Quick Start
+## Our Solution
 
-### Prerequisites
-- Python 3.11+ and Node.js 18+
-- Google Cloud account with BigQuery and Vertex AI enabled
-- Redis instance (local or cloud)
+The Hospital Stress Early Warning System uses AI/ML-based forecasting to identify potential capacity problems **7 days before they become critical**.
 
-### 1. Backend Setup
+The platform provides:
+
+* Predictive insights
+* Automated alerts
+* Real-time monitoring
+* AI-powered recommendations
+* What-if scenario planning
+* Historical trend analysis
+
+This allows hospital administrators to take preventive action instead of reacting to a crisis.
+
+---
+
+# Key Features
+
+## 7-Day Predictive Intelligence
+
+The system forecasts upcoming hospital capacity and staffing risks.
+
+* Bed demand forecasting
+* Staff overload risk prediction
+* Historical trend analysis
+* Seasonal pattern detection
+* Prediction confidence scores
+* Risk-level classification
+
+---
+
+## Smart Alerting
+
+Administrators are automatically notified when predefined risk thresholds are exceeded.
+
+* Configurable alert thresholds
+* Email notifications
+* Slack notifications
+* Automatic retry mechanism
+* Risk-based escalation policies
+* Hospital/unit-specific alert preferences
+
+---
+
+## Real-Time Dashboard
+
+A centralized dashboard provides an overview of the current and predicted hospital situation.
+
+* Real-time hospital stress monitoring
+* 30-second data refresh
+* Interactive charts and graphs
+* Bed occupancy trends
+* Staffing risk indicators
+* Predicted stress levels
+* Responsive interface
+* Dark mode support
+
+---
+
+## What-If Scenario Planning
+
+Administrators can simulate different situations before making operational decisions.
+
+Examples:
+
+* What happens if patient admissions increase by 20%?
+* What happens if additional nurses are scheduled?
+* How much capacity is required during a predicted surge?
+* What is the estimated cost of additional staffing?
+
+The system provides impact and cost analysis for different strategies.
+
+---
+
+## AI Assistant
+
+A natural-language AI assistant helps administrators understand hospital data without manually analyzing complex dashboards.
+
+Example queries:
+
+> "What is the predicted bed demand for next week?"
+
+> "Which department has the highest overload risk?"
+
+> "What should we do if admissions increase by 15%?"
+
+The assistant provides context-aware insights and recommendations based on available hospital data.
+
+---
+
+## Smart Recommendations
+
+The system generates actionable recommendations based on predicted risks.
+
+Recommendations can include:
+
+* Increasing staff allocation
+* Adjusting staff schedules
+* Preparing additional beds
+* Managing planned admissions
+* Preparing emergency capacity
+* Allocating resources between departments
+
+Actions are ranked based on potential impact and cost-effectiveness.
+
+---
+
+# System Architecture
+
+```text
+                    Hospital Data
+                 /       |       \
+                /        |        \
+        Admissions      Beds     Staffing
+                \        |        /
+                 \       |       /
+                  Google BigQuery
+                        |
+                        v
+                  FastAPI Backend
+                        |
+              +---------+---------+
+              |                   |
+              v                   v
+        Google Vertex AI        Redis
+          / Gemini          Real-time Cache
+              |                   |
+              +---------+---------+
+                        |
+                        v
+                  Next.js Frontend
+                        |
+              +---------+---------+
+              |                   |
+              v                   v
+          Dashboard          Alert System
+                              |
+                        +-----+-----+
+                        |           |
+                      Email       Slack
+```
+
+---
+
+# Technology Stack
+
+## Backend
+
+* Python 3.11+
+* FastAPI
+* Google BigQuery
+* Google Vertex AI / Gemini
+* Redis
+* Pytest
+* Property-based testing
+
+## Frontend
+
+* Next.js 15
+* React
+* TypeScript
+* Tailwind CSS
+* Shadcn/UI
+* NextAuth
+* Google OAuth
+
+## Infrastructure
+
+* Google Cloud Run
+* Vercel
+* Docker
+* Automated CI/CD
+* Health monitoring
+
+---
+
+# Project Structure
+
+```text
+hospital-stress-early-warning/
+│
+├── backend/
+│   ├── app/
+│   ├── tests/
+│   ├── config/
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   ├── public/
+│   ├── package.json
+│   └── .env.example
+│
+├── scripts/
+│
+├── SETUP.md
+└── README.md
+```
+
+---
+
+# Quick Start
+
+## Prerequisites
+
+Make sure you have:
+
+* Python 3.11+
+* Node.js 18+
+* Google Cloud account
+* Google BigQuery enabled
+* Google Vertex AI enabled
+* Redis instance, local or cloud
+* Google OAuth credentials
+
+---
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/Dakshmulundkar/Hospital-management.git
+
+cd Hospital-management
+```
+
+---
+
+## 2. Backend Setup
 
 ```bash
 cd backend
 
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Configure environment
+Create your environment file:
+
+```bash
 cp .env.example .env
-# Edit .env with your Google Cloud and Redis configuration
+```
 
-# Set up BigQuery dataset
+Configure your Google Cloud and Redis credentials inside `.env`.
+
+### Set Up BigQuery
+
+```bash
 bq mk --dataset --location=US hospital_data
-bq query --use_legacy_sql=false < config/bigquery_setup.sql
 
-# Start the API server
+bq query --use_legacy_sql=false < config/bigquery_setup.sql
+```
+
+### Start the Backend
+
+```bash
 uvicorn app.main:app --reload --port 8080
 ```
 
-### 2. Frontend Setup
+Backend:
+
+```text
+http://localhost:8080
+```
+
+API Documentation:
+
+```text
+http://localhost:8080/docs
+```
+
+Health Check:
+
+```text
+http://localhost:8080/health
+```
+
+---
+
+## 3. Frontend Setup
+
+Open another terminal:
 
 ```bash
 cd frontend
 
-# Install dependencies
 npm install
+```
 
-# Configure environment
+Create the environment file:
+
+```bash
 cp .env.example .env.local
-# Edit .env.local with API URL and Google OAuth credentials
+```
 
-# Start the web application
+Configure your API URL and Google OAuth credentials.
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-### 3. Access the System
-- **Web Interface**: `http://localhost:3000`
-- **API Documentation**: `http://localhost:8080/docs`
-- **Health Check**: `http://localhost:8080/health`
+Frontend:
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## ☁️ Production Deployment
+# Production Deployment
 
-### Backend (Google Cloud Run)
+## Backend — Google Cloud Run
+
 ```bash
 cd backend
+
 gcloud builds submit --config cloudbuild.yaml
 ```
 
-### Frontend (Vercel)
+The backend can be deployed and scaled using Google Cloud Run.
+
+---
+
+## Frontend — Vercel
+
 ```bash
 cd frontend
+
 vercel deploy --prod
 ```
-*Or connect your GitHub repository to Vercel for automatic deployments.*
+
+Alternatively, connect the GitHub repository to Vercel for automatic deployments.
 
 ---
 
-## 📁 Project Structure
+# Core Workflow
 
 ```text
-├── backend/    # FastAPI backend with AI/ML services
-├── frontend/   # Next.js web application
-├── scripts/    # Setup and development scripts
-└── SETUP.md    # Detailed setup instructions
+Hospital Data
+      |
+      v
+Data Validation
+      |
+      v
+Historical Analysis
+      |
+      v
+AI/ML Forecasting
+      |
+      v
+7-Day Risk Prediction
+      |
+      v
+Stress Level Calculation
+      |
+      v
+Threshold Evaluation
+      |
+      +----------------+
+      |                |
+    Normal          High Risk
+                       |
+                       v
+                 Alert Generation
+                       |
+                       v
+              AI Recommendations
+                       |
+                       v
+                Preventive Action
 ```
 
 ---
 
-## 🛠 Technology Stack
+# Example Use Case
 
-### Backend (FastAPI)
-- Python 3.11+ with FastAPI for high-performance APIs
-- Google BigQuery for scalable data warehousing
-- Redis for real-time caching and performance
-- Google Vertex AI (Gemini) for intelligent predictions
-- Comprehensive testing with pytest and property-based testing
+Suppose a hospital currently has:
 
-### Frontend (Next.js 15)
-- Modern React with Next.js App Router
-- TypeScript for type safety and developer experience
-- Tailwind CSS with Shadcn/UI for medical-grade interface design
-- NextAuth with Google OAuth for secure authentication
-- Real-time updates and responsive design
+```text
+Beds Available:       42
+Current Occupancy:    78%
+Expected Admissions:  +25%
+Staff Availability:   Low
+```
 
-### Infrastructure
-- Google Cloud Run for scalable backend deployment
-- Vercel for optimized frontend hosting
-- Docker containerization for consistent deployments
-- Automated CI/CD with health monitoring
+The system analyzes historical patterns and predicts:
+
+```text
+HIGH RISK
+
+Expected Stress:      87%
+Predicted Peak:       3 Days
+Bed Shortage Risk:    High
+Staff Overload:       High
+Confidence:           91%
+```
+
+The system can then recommend:
+
+```text
+1. Prepare additional beds
+2. Adjust upcoming staff schedules
+3. Increase emergency staffing
+4. Review elective admissions
+5. Prepare additional resources
+```
+
+Administrators receive alerts before the predicted crisis occurs.
 
 ---
 
-## ✨ Key Features
+# Data Management
 
-- **🎯 7-Day Forecasting:** Bed demand predictions with confidence scores, staff overload risk assessment, seasonal and trend analysis, historical pattern recognition.
-- **🚨 Smart Alerting:** Configurable threshold monitoring, Email and Slack notifications with hospital branding, automated retry logic for critical alerts, escalation policies for different risk levels.
-- **📈 Interactive Dashboard:** Real-time monitoring with 30-second refresh, trend indicators and risk visualization, mobile-responsive medical interface, dark mode support for 24/7 operations.
-- **🔄 Scenario Planning:** "What-if" simulations for different staffing levels, impact analysis for admission surges, cost-benefit analysis for resource allocation, quick preset scenarios for common situations.
-- **🤖 AI Assistant:** Natural language queries about hospital status, context-aware recommendations, historical crisis analysis and lessons learned, integration with hospital knowledge base.
-- **📊 Data Management:** CSV upload with comprehensive validation, automated data quality assessment, integration with existing hospital systems, secure data handling and privacy compliance.
+The system supports structured hospital data processing and validation.
+
+Key capabilities include:
+
+* CSV data upload
+* Data validation
+* Data quality assessment
+* Historical data analysis
+* Integration with existing hospital systems
+* Secure data handling
 
 ---
 
-## 🧪 Testing
+# Security
+
+The system is designed with secure data handling in mind.
+
+* OAuth-based authentication
+* Environment-based secrets
+* Secure API communication
+* Role-based access control
+* Data validation
+* Secure cloud deployment
+* Hospital/unit-specific access controls
+
+> This project is a hackathon/prototype system and should not be used for real clinical decision-making without appropriate validation, security review, regulatory compliance, and clinical oversight.
+
+---
+
+# Testing
+
+Run backend tests with:
 
 ```bash
-# Backend tests (includes property-based testing)
-cd backend && pytest tests/
-
-# Frontend tests
-cd frontend && npm test
+pytest
 ```
 
----
-
-## 📚 Documentation
-
-- [Detailed Setup Guide](SETUP.md) - Complete installation and configuration
-- [Backend API Documentation](http://localhost:8080/docs) - Interactive API explorer
-- [Requirements Specification](.kiro/specs/hospital-stress-warning/requirements.md)
-- [System Design](.kiro/specs/hospital-stress-warning/design.md)
+The project includes automated testing for backend services and data-processing logic.
 
 ---
 
-## 📜 License
-Proprietary - All rights reserved
+# Future Improvements
+
+* Integration with real Hospital Information Systems
+* Mobile application for administrators
+* Advanced time-series forecasting models
+* Multi-hospital management
+* Department-level forecasting
+* IoT-based real-time occupancy monitoring
+* Advanced resource cost optimization
+* Enterprise-grade role-based access control
+* Long-term capacity planning
+* SMS and WhatsApp alert integration
+
+---
+
+# Why This Project?
+
+Most hospital management systems focus on **monitoring what is happening now**.
+
+This project focuses on **predicting what is going to happen next**.
+
+The core workflow is:
+
+```text
+Monitor → Predict → Alert → Recommend → Act
+```
+
+Instead of waiting for hospital capacity to reach a critical point, administrators get an **early warning window of up to 7 days** to prepare resources and reduce the impact on patient care.
+
+---
+
+# Hackathon Project
+
+Built as a hackathon project to demonstrate how **AI, predictive analytics, cloud computing, and modern web technologies** can be applied to real-world healthcare capacity management.
+
+---
+
+# License
+
+This project is intended for educational and hackathon purposes.
+
+If you plan to make this project open source, consider adding an appropriate license such as the MIT License.
