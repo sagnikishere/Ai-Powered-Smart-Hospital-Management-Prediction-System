@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-multipart
+google-cloud-bigquery
+google-cloud-aiplatform
+redis
+pandas
+numpy
+hypothesis
+pytest
+pytest-asyncio
+httpx
+python-dotenv
+sendgrid
+requests
