@@ -56,7 +56,7 @@ class RecommendationRequest(BaseModel):
     include_historical: bool = True
 
 class AlertRequest(BaseModel):
-    alert_type: str = Field(regex="^(bed_stress|staff_risk)$")
+    alert_type: str = Field(pattern="^(bed_stress|staff_risk)$")
     risk_score: float = Field(ge=0, le=100)
     threshold: float = Field(ge=0, le=100)
     recipients: List[str]

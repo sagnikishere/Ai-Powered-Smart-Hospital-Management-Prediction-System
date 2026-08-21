@@ -97,7 +97,7 @@ export default function OnboardingPage() {
     // Check if onboarding was already completed
     const onboardingCompleted = localStorage.getItem('onboarding_completed')
     if (onboardingCompleted === 'true') {
-      router.push('/(authenticated)/dashboard')
+      router.push('/dashboard')
     }
 
     // Load saved progress
@@ -147,13 +147,13 @@ export default function OnboardingPage() {
   const completeOnboarding = () => {
     localStorage.setItem('onboarding_completed', 'true')
     localStorage.removeItem('onboarding_progress')
-    router.push('/(authenticated)/dashboard')
+    router.push('/dashboard')
   }
 
   const skipOnboardingProcess = () => {
     localStorage.setItem('onboarding_completed', 'true')
     localStorage.removeItem('onboarding_progress')
-    router.push('/(authenticated)/dashboard')
+    router.push('/dashboard')
   }
 
   const handleFileUpload = async (_file: File) => {

@@ -185,7 +185,7 @@ export default function Dashboard() {
           <h2 className="text-xl font-semibold mb-2 text-gray-900">No Data Available</h2>
           <p className="text-gray-600 mb-6">Upload hospital data to start monitoring capacity and stress levels</p>
           <Button 
-            onClick={() => window.location.href = '/(authenticated)/upload'}
+            onClick={() => window.location.href = '/upload'}
             className="bg-blue-600 hover:bg-blue-700"
           >
             Upload Data
@@ -514,7 +514,7 @@ export default function Dashboard() {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start rounded-xl"
-                    onClick={() => window.location.href = '/(authenticated)/simulator'}
+                    onClick={() => window.location.href = '/simulator'}
                   >
                     <TestTube className="h-4 w-4 mr-2" />
                     Run Scenario Simulation
@@ -522,7 +522,7 @@ export default function Dashboard() {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start rounded-xl"
-                    onClick={() => window.location.href = '/(authenticated)/upload'}
+                    onClick={() => window.location.href = '/upload'}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload New Data
@@ -530,7 +530,7 @@ export default function Dashboard() {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start rounded-xl"
-                    onClick={() => window.location.href = '/(authenticated)/chat'}
+                    onClick={() => window.location.href = '/chat'}
                   >
                     <Brain className="h-4 w-4 mr-2" />
                     Ask AI Assistant

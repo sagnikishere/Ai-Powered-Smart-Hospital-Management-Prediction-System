@@ -24,25 +24,25 @@ export default function Navigation() {
   const navItems = [
     {
       name: 'Dashboard',
-      href: '/(authenticated)/dashboard',
+      href: '/dashboard',
       icon: LayoutDashboard,
       description: 'Real-time monitoring'
     },
     {
       name: 'Upload Data',
-      href: '/(authenticated)/upload',
+      href: '/upload',
       icon: Upload,
       description: 'CSV data import'
     },
     {
       name: 'Simulator',
-      href: '/(authenticated)/simulator',
+      href: '/simulator',
       icon: TestTube,
       description: 'What-if scenarios'
     },
     {
       name: 'AI Assistant',
-      href: '/(authenticated)/chat',
+      href: '/chat',
       icon: MessageCircle,
       description: 'Natural language queries'
     }

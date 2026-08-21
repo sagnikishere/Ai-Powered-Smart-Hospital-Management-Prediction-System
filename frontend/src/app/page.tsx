@@ -29,7 +29,7 @@ export default function Home() {
     if (status === "loading") return
     
     if (session) {
-      router.push('/(authenticated)/dashboard')
+      router.push('/dashboard')
     }
   }, [session, status, router])
 
