@@ -199,7 +199,7 @@ export default function OnboardingPage() {
             </h1>
           </div>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Let's get your Hospital Stress Early Warning System configured in 5 simple steps
+            Let&apos;s get your Hospital Stress Early Warning System configured in 5 simple steps
           </p>
           <div className="flex items-center justify-center space-x-4 mb-6">
             <Progress value={progress} className="w-80 h-2" />
@@ -271,7 +271,7 @@ export default function OnboardingPage() {
                     <div>
                       <h4 className="font-medium text-blue-900 mb-2">Data Requirements</h4>
                       <p className="text-blue-800 text-sm leading-relaxed">
-                        Upload a CSV file with your hospital's historical data to enable AI predictions.
+                        Upload a CSV file with your hospital&apos;s historical data to enable AI predictions.
                         The file should contain: date, admissions, beds_occupied, staff_on_duty, overload_flag
                       </p>
                     </div>

@@ -276,7 +276,7 @@ export default function PatientLoginPage() {
                 </button>
 
                 <div className="text-center text-sm text-gray-500 mt-2">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <button type="button" onClick={() => setTab('register')} className="text-teal-600 font-semibold hover:text-teal-700">
                     Create one free
                   </button>

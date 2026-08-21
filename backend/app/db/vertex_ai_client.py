@@ -18,8 +18,8 @@ class VertexAIClient:
         self.model = None
         self.available = False
         
-        # Only initialize if credentials and project are available
-        if VERTEX_AI_AVAILABLE and settings.vertex_ai_project:
+        # Only initialize if credentials and real project are available
+        if VERTEX_AI_AVAILABLE and settings.vertex_ai_project and settings.vertex_ai_project not in ["your-project-id", ""]:
             try:
                 # Initialize Vertex AI
                 vertexai.init(

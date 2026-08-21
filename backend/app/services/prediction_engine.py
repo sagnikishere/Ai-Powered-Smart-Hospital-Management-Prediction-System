@@ -61,6 +61,11 @@ class PredictionEngine:
         predictions = []
         base_date = datetime.now().date()
         
+        import uuid
+        hospital_id_val = "UNKNOWN"
+        if processed_data and hasattr(processed_data[0], 'hospital_id'):
+            hospital_id_val = processed_data[0].hospital_id
+
         for i, day_data in enumerate(forecast_data):
             prediction_date = base_date + timedelta(days=i+1)
             predicted_beds = day_data.get('predicted_beds', 0)
@@ -73,6 +78,8 @@ class PredictionEngine:
             is_high_risk = bed_stress > 85.0
             
             prediction = DailyPrediction(
+                prediction_id=f"PRED-{uuid.uuid4().hex[:8].upper()}",
+                hospital_id=hospital_id_val,
                 date=datetime.combine(prediction_date, datetime.min.time()),
                 predicted_beds=predicted_beds,
                 bed_stress=bed_stress,
@@ -1026,10 +1033,13 @@ Ensure recommendations are:
             print(f"Error invalidating cache: {e}")
             return False
     
-    def get_dashboard_data(self) -> 'DashboardData':
+    def get_dashboard_data(self, historical_data: Optional[List[HospitalRecord]] = None, hospital_id: str = "DEFAULT") -> 'DashboardData':
         """
         Get comprehensive dashboard data with caching
         
+        Args:
+            historical_data: Optional historical data to use instead of querying BigQuery
+            
         Returns:
             DashboardData with all metrics for the dashboard
         """
@@ -1050,7 +1060,8 @@ Ensure recommendations are:
             return DashboardData(**cached_result)
         
         # Get historical data
-        historical_data = self._get_historical_data()
+        if historical_data is None:
+            historical_data = self._get_historical_data()
         
         # Generate 7-day forecast
         seven_day_forecast = self.forecast_bed_demand(
@@ -1107,6 +1118,7 @@ Ensure recommendations are:
         
         # Create dashboard data
         dashboard_data = DashboardData(
+            hospital_id=hospital_id,
             bed_stress_current=bed_stress_current,
             staff_risk_current=staff_risk_current,
             active_alerts_count=active_alerts_count,
@@ -1119,6 +1131,7 @@ Ensure recommendations are:
         # Cache the result with 30-second TTL
         # Need to serialize nested objects for caching
         cache_data = {
+            'hospital_id': dashboard_data.hospital_id,
             'bed_stress_current': dashboard_data.bed_stress_current,
             'staff_risk_current': dashboard_data.staff_risk_current,
             'active_alerts_count': dashboard_data.active_alerts_count,
@@ -1310,7 +1323,10 @@ Ensure recommendations are:
             # Recalculate high risk flag
             is_high_risk = adjusted_bed_stress > 85.0
             
+            import uuid
             adjusted_prediction = DailyPrediction(
+                prediction_id=f"PRED-{uuid.uuid4().hex[:8].upper()}",
+                hospital_id=getattr(prediction, 'hospital_id', "UNKNOWN"),
                 date=prediction.date,
                 predicted_beds=adjusted_beds,
                 bed_stress=adjusted_bed_stress,

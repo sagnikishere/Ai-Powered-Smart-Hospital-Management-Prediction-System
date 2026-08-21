@@ -252,11 +252,11 @@ export default function HospitalSetupPage() {
         </p>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {[
-          { label: 'Total Beds *', field: 'totalBeds', icon: Bed, color: 'blue' },
-          { label: 'ICU Beds', field: 'icuBeds', icon: Users, color: 'red' },
-          { label: 'Emergency Beds', field: 'emergencyBeds', icon: Zap, color: 'amber' },
-        ].map(({ label, field, icon: Icon, color }) => (
+        {([
+          { label: 'Total Beds *', field: 'totalBeds' as const, icon: Bed, color: 'blue' },
+          { label: 'ICU Beds', field: 'icuBeds' as const, icon: Users, color: 'red' },
+          { label: 'Emergency Beds', field: 'emergencyBeds' as const, icon: Zap, color: 'amber' },
+        ]).map(({ label, field, icon: Icon, color }) => (
           <div key={field}>
             <label className={labelCls}>{label}</label>
             <div className={`relative`}>
@@ -264,8 +264,8 @@ export default function HospitalSetupPage() {
                 <Icon className={`w-3.5 h-3.5 text-${color}-600`} />
               </div>
               <input type="number" min={0}
-                value={(form as Record<string, unknown>)[field] as number}
-                onChange={e => set(field as keyof FormData, parseInt(e.target.value) || 0)}
+                value={form[field]}
+                onChange={e => set(field, parseInt(e.target.value) || 0)}
                 className={`${inputCls} pl-12 text-lg font-bold`} />
             </div>
           </div>

@@ -13,8 +13,8 @@ class BigQueryClient:
         self.dataset_id = settings.bigquery_dataset
         self.available = False
         
-        # Only initialize if project ID is available
-        if settings.bigquery_project_id:
+        # Only initialize if project ID is available and not default placeholder
+        if settings.bigquery_project_id and settings.bigquery_project_id not in ["your-project-id", ""]:
             try:
                 self.client = bigquery.Client(project=settings.bigquery_project_id)
                 self.available = True

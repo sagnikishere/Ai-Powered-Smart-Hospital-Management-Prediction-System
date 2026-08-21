@@ -505,7 +505,7 @@ export default function SimulatorPage() {
                   </div>
                   <h3 className="text-xl font-semibold mb-3 text-gray-900">Ready to Simulate</h3>
                   <p className="text-gray-600 mb-6 max-w-md mx-auto leading-relaxed">
-                    Adjust the scenario parameters in the control panel and click "Run Simulation" 
+                    Adjust the scenario parameters in the control panel and click &quot;Run Simulation&quot; 
                     to see the impact on hospital operations.
                   </p>
                   <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">

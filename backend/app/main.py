@@ -833,15 +833,21 @@ async def staff_risk(request: StaffRiskRequest):
         )
 
 @app.get("/dashboard-data", response_model=dict)
-async def dashboard_data():
+async def dashboard_data(hospital_id: Optional[str] = None):
     """
     Get comprehensive dashboard data
     
     Returns 7-day stress summary for dashboard
     """
     try:
+        # Get historical data for the specific hospital if requested
+        if hospital_id:
+            historical = hospital_data_by_id.get(hospital_id)
+        else:
+            historical = hospital_data if hospital_data else None
+
         # Get dashboard data from prediction engine
-        data = prediction_engine.get_dashboard_data()
+        data = prediction_engine.get_dashboard_data(historical_data=historical, hospital_id=hospital_id or "DEFAULT")
         
         # Convert to response format
         return {

@@ -315,7 +315,7 @@ export default function PatientDashboard() {
               <h3 className="font-bold">Emergency</h3>
             </div>
             <p className="text-red-100 text-xs mb-3 leading-relaxed">
-              For medical emergencies, call <strong className="text-white">112</strong> (national emergency) or contact your hospital's emergency line directly.
+              For medical emergencies, call <strong className="text-white">112</strong> (national emergency) or contact your hospital&apos;s emergency line directly.
             </p>
             {hospital?.emergencyAvailable && (
               <div className="bg-white/20 rounded-xl p-3">

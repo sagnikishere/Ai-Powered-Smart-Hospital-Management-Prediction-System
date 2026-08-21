@@ -98,12 +98,12 @@ class HospitalAnnouncement:
 
 @dataclass
 class HospitalRecord:
-    hospital_id: str
     date: datetime
     admissions: int
     beds_occupied: int
     staff_on_duty: int
     overload_flag: bool
+    hospital_id: str = "DEFAULT"
     
     def validate(self) -> bool:
         """Validates data types and ranges"""
@@ -124,13 +124,13 @@ class HospitalRecord:
 
 @dataclass
 class DailyPrediction:
-    prediction_id: str
-    hospital_id: str
     date: datetime
     predicted_beds: int
     bed_stress: float  # 0-100
     confidence: float  # 0-100
     is_high_risk: bool  # True if bed_stress > 85
+    prediction_id: str = ""
+    hospital_id: str = "DEFAULT"
     
     def validate(self) -> bool:
         """Validates data types and ranges"""

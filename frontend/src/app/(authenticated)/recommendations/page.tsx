@@ -119,7 +119,10 @@ export default function RecommendationsPage() {
 
     try {
       // First get current stress levels from dashboard
-      const dashRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard-data`)
+      const url = profile?.hospitalId 
+        ? `${process.env.NEXT_PUBLIC_API_URL}/dashboard-data?hospital_id=${profile.hospitalId}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/dashboard-data`
+      const dashRes = await fetch(url)
       if (!dashRes.ok) {
         throw new Error('Prediction service unavailable. Please ensure the backend is running.')
       }

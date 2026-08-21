@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getHospitalProfile } from "@/lib/hospital-store"
 import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { 
@@ -83,7 +84,12 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard-data`)
+      const profile = getHospitalProfile()
+      const url = profile?.hospitalId 
+        ? `${process.env.NEXT_PUBLIC_API_URL}/dashboard-data?hospital_id=${profile.hospitalId}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/dashboard-data`
+        
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error('Failed to fetch dashboard data')
       }
